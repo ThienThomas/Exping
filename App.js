@@ -37,6 +37,11 @@ import PickDoc from './screen/Chat/Function/PickDoc';
 import ChatInfo from './screen/Chat/ChatInfo';
 import Sharing from './screen/Chat/Sharing';
 import CreateGroupChat from './screen/Chat/CreateGroupChat';
+import CreateGroupInfo from './screen/Chat/CreateGroupInfo';
+import ChatGroup from './screen/Chat/ChatGroup';
+import TakePhotoGroup from './screen/Chat/Function/TakePhotoGroup';
+import PickPhotoGroup from './screen/Chat/Function/PickPhotoGroup';
+import PickVideoGroup from './screen/Chat/Function/PickVideoGroup';
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
 function App() {
@@ -88,17 +93,33 @@ function AuthenticatedNavigator() {
           name="takephoto" 
           component={TakePhoto} 
           />
+                  <Stack.Screen screenOptions={{presentation: 'modal', headerShown : false, headerTitleStyle:{color: 'transparent'}}}
+          name="takephotogroup" 
+          component={TakePhotoGroup} 
+          />
       </Stack.Group> 
       <Stack.Group screenOptions={{presentation: 'card', headerShown : false}}>
         <Stack.Screen screenOptions={{presentation: 'modal', headerShown : false, headerTitleStyle:{color: 'transparent'}}}
           name="pickphoto" 
           component={PickPhoto} 
           />
-      </Stack.Group>             
+      </Stack.Group>    
+      <Stack.Group screenOptions={{presentation: 'card', headerShown : false}}>
+          <Stack.Screen screenOptions={{presentation: 'modal', headerShown : false, headerTitleStyle:{color: 'transparent'}}}
+          name="pickphotogroup" 
+          component={PickPhotoGroup} 
+          />
+      </Stack.Group>         
       <Stack.Group screenOptions={{presentation: 'card', headerShown : false}}>
         <Stack.Screen screenOptions={{presentation: 'modal', headerShown : false, headerTitleStyle:{color: 'transparent'}}}
           name="pickvideo" 
           component={PickVideo} 
+          />
+      </Stack.Group> 
+      <Stack.Group screenOptions={{presentation: 'card', headerShown : false}}>
+        <Stack.Screen screenOptions={{presentation: 'modal', headerShown : false, headerTitleStyle:{color: 'transparent'}}}
+          name="pickvideogroup" 
+          component={PickVideoGroup} 
           />
       </Stack.Group> 
       <Stack.Group screenOptions={{presentation: 'card', headerShown : false}}>
@@ -161,6 +182,44 @@ function AuthenticatedNavigator() {
             <Stack.Group>
       </Stack.Group>
       <Stack.Group>
+            <Stack.Screen screenOptions={{presentation: 'modal'}}
+                name="chatgroup" 
+                component={ChatGroup} 
+                options={({route, navigation}) => ({
+                  headerBackTitle: <>
+                    <Feather name="chevron-left" size={35} color="#42C2FF" />
+                  </>,
+                  headerLeftLabelVisible: true,
+                  headerLeftContainerStyle: {
+                    width: 50
+                  },
+                  headerTitle: () => (
+                    <TouchableOpacity style={{flexDirection: 'row',alignItems: 'center',}} >
+                      <FriendsAvatar
+                          Img={route.params.groupinfo.photoURL}
+                          Width={40}
+                          Height={40} 
+                          Type={true}
+                      />
+                      <Text style={{marginLeft: 10, fontWeight: 'bold', fontSize: 15, }}>{route.params.groupinfo.groupname}</Text>
+                    </TouchableOpacity>
+                   ),
+                  headerTitleContainerStyle: {
+                    marginLeft: 0
+                  },
+                  headerBackTitleVisible: true,
+                  headerBackImage: () => (<></>),
+                  headerRight: () => (
+                    <View style={{flexDirection: 'row',alignItems: 'center', justifyContent: 'center'}}>
+                      <TouchableOpacity style={{marginLeft: 10, marginRight: 15}}  onPress={() => { navigation.navigate('chatinfogroup', {group_item: route.params.group_item})}}>
+                        <MaterialIcons name="info" size={26} color="#42C2FF" />
+                      </TouchableOpacity>
+                    </View>
+                    ),
+                  })}
+                />
+            </Stack.Group>
+      <Stack.Group>
               <Stack.Screen 
                 name='chatinfo'
                 component={ChatInfo}
@@ -188,7 +247,7 @@ function AuthenticatedNavigator() {
                   })}
               />
             </Stack.Group>
-            <Stack.Group screenOptions={{presentation: 'modal', headerShown: false, headerTitle: "Tạo nhóm", headerTitleAlign: 'center', headerTitleStyle: {fontSize: 18, color: 'black'}}}>
+            <Stack.Group screenOptions={{presentation: 'card', headerShown: false, headerTitle: "Tạo nhóm", headerTitleAlign: 'center', headerTitleStyle: {fontSize: 18, color: 'black'}}}>
                 <Stack.Screen name="creategroup" component={CreateGroupChat}
                   options={({route, navigation}) => ({
                     headerBackTitle: <Feather name="chevron-left" size={35} color="black" />,
@@ -206,20 +265,21 @@ function AuthenticatedNavigator() {
               />
             </Stack.Group>      
       <Stack.Group screenOptions={{presentation: 'modal', headerTitle: "Cài đặt",  headerTitleStyle:{color: 'black', fontSize: 18}, headerTitleAlign:'center'}}>
-            <Stack.Screen 
-                  name='settings'
-                  component={Settings} 
-                  options={{
-                    headerBackTitle: <Feather name="chevron-left" size={35} color="black" />,
-                    headerBackTitleVisible: true,
-                    headerBackTitleStyle: {
-                    color: 'black'
-                  },
-                 headerBackImage: () => {""},
-              }}
+        <Stack.Screen 
+          name='settings'
+          component={Settings} 
+          options={{
+            headerBackTitle: <Feather name="chevron-left" size={35} color="black" />,
+            headerBackTitleVisible: true,
+            headerBackTitleStyle: {
+              color: 'black'
+            },
+            headerBackImage: () => {""},}}
         />
       </Stack.Group>
-      
+      <Stack.Group screenOptions={{presentation: 'modal', headerShown: false}}>
+        <Stack.Screen name="creategroupinfo" component={CreateGroupInfo} />
+      </Stack.Group>
     </Stack.Navigator>
   )
 }

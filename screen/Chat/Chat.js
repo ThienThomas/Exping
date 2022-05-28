@@ -62,7 +62,9 @@ export default function Chat({route}) {
         }
     }
   }
-  
+  useState(() => {
+    return () => fecthMess()
+  })
   const FetchAudio = async () =>{
     AudioRecorder = useRef(new Audio.Recording())
   }
@@ -144,11 +146,13 @@ export default function Chat({route}) {
     return () =>  {KeyboardDidShowListenner.remove()}
   }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     const interval = setInterval(async () => {
       fecthMess()
-    }, 1000)
-    return () => clearInterval(interval)
+    }, 500)
+    return () => {
+      clearInterval(interval)
+    }
   }, [messages])
 
   const onSend = async () =>{

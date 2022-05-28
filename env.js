@@ -1,2 +1,2 @@
-const baseurl = "http://expinggg.eastus.cloudapp.azure.com"
+const baseurl = "http://team02androidthaihuytuan2022.centralindia.cloudapp.azure.com"
 export default baseurl;

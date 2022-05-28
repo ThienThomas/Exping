@@ -7,6 +7,8 @@ import { KeyboardAvoidingView } from "react-native";
 import { AntDesign, Feather } from '@expo/vector-icons'; 
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import FriendsAvatar from "../../elements/FriendsAvatar";
+
 import { getallfriends } from "../../mymodules/CompressImg";
 import { useNavigation } from "@react-navigation/native";
 const styles = StyleSheet.create({
@@ -17,7 +19,8 @@ const styles = StyleSheet.create({
     tabcontainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent:'space-between',
+      justifyContent:'space-between',      
+      marginBottom: 15,
     },
     
   })
@@ -30,8 +33,12 @@ export default function CreateGroupChat() {
     const [checked, setChecked] = useState([])
     const navigation = useNavigation()
     const fetchFriend = async () => {
+        setIsBusy(true)
         const result = await getallfriends()
         setMasterDataSource(result)
+        setFilteredDataSource(result)
+        console.log(result)
+        setIsBusy(false)
     }
     useEffect(() => {
         return fetchFriend()
@@ -53,37 +60,36 @@ export default function CreateGroupChat() {
       };
     const ItemView = ({item}) => {
         return (
-            <>
-            {isBusy === true ? (
-            <></>) : (<>
-            {typeof listFriends === 'undefined' ? (<></>) : (<>
-            {listFriends.find(element => element === item.uid) ? (<>
               <View style={styles.tabcontainer}>
-              <View style={{flexDirection: 'row', alignItems:'center', }}>
-              <FriendsAvatar
-                Img={"none"}
-                Width={40}
-                Height={40}
-              />
-              <View style={{marginLeft: 15, marginRight: 15}}>
-              <Text style={{fontWeight: 'bold', fontSize: 18}}>
-                  {item.displayName}
-              </Text>
-              </View>
-              </View>
+                <View style={{flexDirection: 'row', alignItems:'center', }}>
+                  <FriendsAvatar
+                    Img={item.photoURL}
+                    Height={55}
+                    Width={55}
+                  >
+                  </FriendsAvatar>
+                <View style={{marginLeft: 15, marginRight: 15}}>
+                  <Text style={{fontWeight: 'bold', fontSize: 18}}>
+                      {item.displayName}
+                  </Text>
+                  <Text>
+                      {item.email}
+                  </Text>
+                </View>
+                </View>
               <View>
                 <CheckBox 
                     checkedColor="#42C2FF"
-                    checked={checked.includes(item.uid)}
+                    checked={checked.includes(item.email)}
                     onPress={() => {
                         const newIds = [...checked];
-                        const index = newIds.indexOf(item.uid);
+                        const index = newIds.indexOf(item.email);
                         if (index > -1) {
                             newIds.splice(index, 1);
                             console.log(newIds)
                         }
                         else {
-                            newIds.push(item.uid)
+                            newIds.push(item.email)
                             console.log(newIds)
                         }
                         setChecked(newIds)
@@ -92,9 +98,7 @@ export default function CreateGroupChat() {
                 </CheckBox>
               </View>
               </View>
-            </>) : (<></>)}
-            </>)}</>)} 
-            </>
+
         );
     };
   return (

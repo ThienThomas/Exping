@@ -14,7 +14,7 @@ export default function FriendsAvatar({Width, Height, Img, Type = false}) {
                         resizeMethod="auto">
                 </Image></>) : (<>
                         <Image
-                            source={Img === "none" ? require('../assets/user_no_avatar.jpg') : {uri: Img}}
+                            source={Img === "none" ? require('../assets/group_no_avatar.png') : {uri: Img}}
                             style={{width: !Width ? 45 : Width, 
                             height: !Height ? 45 : Height,
                             borderRadius: 200
