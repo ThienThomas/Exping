@@ -42,6 +42,7 @@ import ChatGroup from './screen/Chat/ChatGroup';
 import TakePhotoGroup from './screen/Chat/Function/TakePhotoGroup';
 import PickPhotoGroup from './screen/Chat/Function/PickPhotoGroup';
 import PickVideoGroup from './screen/Chat/Function/PickVideoGroup';
+import ChatInfoGroup from './screen/Chat/ChatInfoGroup';
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
 function App() {
@@ -211,7 +212,7 @@ function AuthenticatedNavigator() {
                   headerBackImage: () => (<></>),
                   headerRight: () => (
                     <View style={{flexDirection: 'row',alignItems: 'center', justifyContent: 'center'}}>
-                      <TouchableOpacity style={{marginLeft: 10, marginRight: 15}}  onPress={() => { navigation.navigate('chatinfogroup', {group_item: route.params.group_item})}}>
+                      <TouchableOpacity style={{marginLeft: 10, marginRight: 15}}  onPress={() => { navigation.navigate('chatinfogroup', {groupinfo: route.params.groupinfo, groupid: route.params.groupid, myemail: route.params.myemail })}}>
                         <MaterialIcons name="info" size={26} color="#42C2FF" />
                       </TouchableOpacity>
                     </View>
@@ -223,6 +224,18 @@ function AuthenticatedNavigator() {
               <Stack.Screen 
                 name='chatinfo'
                 component={ChatInfo}
+                options={{
+                  headerBackTitle: <Feather name="chevron-left" size={35} color="black" />,
+                  headerBackTitleVisible: true,
+                  headerBackTitleStyle: {
+                  color: 'black'
+                  },
+                  headerBackImage: () => {""},
+                  }}
+              />
+              <Stack.Screen 
+                name='chatinfogroup'
+                component={ChatInfoGroup}
                 options={{
                   headerBackTitle: <Feather name="chevron-left" size={35} color="black" />,
                   headerBackTitleVisible: true,

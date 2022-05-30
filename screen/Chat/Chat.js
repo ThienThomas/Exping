@@ -34,6 +34,7 @@ export default function Chat({route}) {
   const modalizeRecordingAudio = useRef()
   const modalizegifRef = useRef()
   const [pickedDoc, setPickedDoc] = useState(null)
+  const [convertedExt, setConvertedExt] = useState(null)
   let AudioRecorder = useRef(new Audio.Recording())
   let AudioPlayer = useRef(new Audio.Sound())
   //console.log(user)
@@ -86,6 +87,7 @@ export default function Chat({route}) {
       let converted_extension = ConvertExtension(extension)
       if (converted_extension !== 'not_support') {
           setPickedDoc(result)
+          setConvertedExt(converted_extension)
           onOpenDocPicker()
         //navigation.navigate('pickdoc', {document: result,  user: route.params.userinfo, fremail : fremail, ext: converted_extension})
       }
@@ -464,7 +466,7 @@ export default function Chat({route}) {
             )}
           />
         <Modalize ref={modalizedocpickerRef} adjustToContentHeight={true}>
-            <PickDoc document={pickedDoc} user={route.params.userinfo} fremail={fremail}></PickDoc>
+            <PickDoc document={pickedDoc} user={route.params.userinfo} fremail={fremail} ext={convertedExt}></PickDoc>
         </Modalize>
         <Modalize ref={modalizeRecordingAudio} adjustToContentHeight={true} onClosed={async () =>{
           const re  = await AudioRecorder.current.getStatusAsync()

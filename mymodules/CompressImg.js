@@ -147,7 +147,7 @@ export async function SendVidMess(token, email, fremail, video){
         })
     }
 }
-export async function SendFileMess(token, email, fremail, file){
+export async function SendFileMess(token, email, fremail, file, ext){
     if (token) {
         console.log(new Date())
         const mess = {
@@ -162,7 +162,7 @@ export async function SendFileMess(token, email, fremail, file){
         formData.append('file' ,{
             uri: file.uri,
             name:`${email + fremail}`,
-            type:'application/*'
+            type: `application/${ext}`
         })
         formData.append('data', JSON.stringify(mess))
         const uploaded = await axios({
@@ -457,6 +457,99 @@ export async function SendVidMessGroup(groupid, video){
             console.log(response.data)
         }).catch((err) => {
             console.log(err.response)
+        })
+    }
+}
+export async function SendFileMessGroup(groupid, file, ext){
+    const token = await AsyncStorageLib.getItem('token')
+    const email = await AsyncStorageLib.getItem('email')
+    if (token) {
+        console.log(new Date())
+        const mess = {
+            groupid: groupid,
+            sentBy: email,
+            createdAt: new Date(),
+            type: "document",
+            attachmentname: file.name
+        }
+        let formData = new FormData()
+        formData.append('file' ,{
+            uri: file.uri,
+            name:`${email + groupid}`,
+            type:`application/${ext}`
+        })
+        formData.append('data', JSON.stringify(mess))
+        const uploaded = await axios({
+            method: 'post',
+            url: `${baseurl}/group/senddocmess`,
+            headers: {
+                Authorization: token,
+                Accept: '*/*',
+                'Content-Type': 'multipart/form-data',
+            },
+            data: formData
+        }).then((response) =>{
+            console.log(response.data)
+        }).catch((err) => {
+            console.log(err.response)
+        })
+    }
+}
+export async function SendAudioMessGroup(groupid, file){
+    const token = await AsyncStorageLib.getItem('token')
+    const email = await AsyncStorageLib.getItem('email')
+    if (token) {
+        console.log(new Date())
+        const mess = {
+            sentBy: email,
+            groupid: groupid,
+            createdAt: new Date(),
+            type: "audio",
+        }
+        let formData = new FormData()
+        formData.append('file' ,{
+            uri: file,
+            name:`${email + groupid}`,
+            type:'audio/mp3'
+        })
+        formData.append('data', JSON.stringify(mess))
+        const uploaded = await axios({
+            method: 'post',
+            url: `${baseurl}/group/sendaudiomess`,
+            headers: {
+                Authorization: token,
+                Accept: '*/*',
+                'Content-Type': 'multipart/form-data',
+            },
+            data: formData
+        }).then((response) =>{
+            console.log(response.data)
+        }).catch((err) => {
+            console.log(err.response)
+        })
+    }
+}
+export async function sendGifGroup(groupid, file){
+    console.log(file.images.original.url)
+    const token = await AsyncStorageLib.getItem('token')
+    const email = await AsyncStorageLib.getItem('email')
+    if (token) {
+        const result = await axios({
+            method: 'post',
+            headers: {
+                Authorization: token
+            },
+            data: {
+                groupid: groupid,
+                sentBy: email,
+                gif: file.images.original.url,
+                createdAt: new Date()
+            },
+            url: `${baseurl}/group/sendgifmessage`
+        }).then((response) => {
+            console.log(response.data)
+        }).catch((err) => {
+            console.log(err.respone)
         })
     }
 }

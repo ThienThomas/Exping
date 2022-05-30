@@ -7,15 +7,10 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import baseurl from "../../../env";
-import { SendFileMess } from "../../../mymodules/CompressImg";
-export default function PickDoc({document, user, fremail, ext}){
-    
+import { SendFileMessGroup } from "../../../mymodules/CompressImg";
+export default function PickDocGroup({document, groupid, ext}){
     async function UploadDocs(){
-        console.log(document)
-        console.log(ext)
-        const token = await AsyncStorageLib.getItem('token')
-        const email = await AsyncStorageLib.getItem('email')
-        const result = await SendFileMess(token, email, fremail, document, ext)
+        const result = await SendFileMessGroup(groupid, document, ext)
         console.log(result)
     }
     return (

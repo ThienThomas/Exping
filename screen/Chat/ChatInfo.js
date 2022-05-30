@@ -27,7 +27,7 @@ export default function ChatInfo({route}) {
         <View style={{margin: 20}}> 
         <Text style={{color: "black", fontWeight: 'bold', fontSize: 15, marginBottom: 10}}>HÀNH ĐỘNG KHÁC</Text>
             <TouchableOpacity style={{marginBottom: 15, flexDirection:'row', justifyContent:'space-between', alignItems: 'center'}} onPress={() => {navigation.navigate('friendinfo', {userinfo: userinfo})}} >
-                <Text style={{fontSize: 17}}>Xem trang cá nhân của {userinfo.partnerName}</Text>
+                <Text style={{fontSize: 17}}>Xem trang cá nhân của {userinfo.displayName}</Text>
                     <View style={{borderWidth: 1, borderRadius: 100, padding: 2.5}}>
                         <Ionicons  name="information" size={20} color="black" />
                     </View>

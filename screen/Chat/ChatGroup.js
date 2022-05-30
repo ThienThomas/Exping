@@ -19,10 +19,15 @@ import * as DocumentPicker from 'expo-document-picker';
 import EmojiPicker, { EmojiKeyboard } from 'rn-emoji-keyboard';
 import PickDoc from './Function/PickDoc';
 import { GetGroupMessages } from '../../mymodules/CompressImg';
+import PickDocGroup from './Function/PickDocGroup';
+import RecordAudioGroup from './Function/RecordAudioGroup';
+import FetchingGif from './Function/FetchingGif';
+import FetchingGifGroup from './Function/FetchingGifGroup';
 
 export default function ChatGroup({route}) {
     const {groupinfo} = route.params
     const groupid = groupinfo.docid
+    
     //console.log(groupid)
     const [myemail, setMyemail] = useState(null)
     //const [fremail, setFremail] = useState(null)
@@ -34,10 +39,11 @@ export default function ChatGroup({route}) {
     const modalizeRecordingAudio = useRef()
     const modalizegifRef = useRef()
     const [pickedDoc, setPickedDoc] = useState(null)
+    const [convertedExt, setConvertedExt] = useState(null)
     let AudioRecorder = useRef(new Audio.Recording())
     let AudioPlayer = useRef(new Audio.Sound())
     //console.log(user)
-
+    route.params.myemail = myemail
     const FetchAudio = async () =>{
       AudioRecorder = useRef(new Audio.Recording())
     }
@@ -59,6 +65,7 @@ export default function ChatGroup({route}) {
         let converted_extension = ConvertExtension(extension)
         if (converted_extension !== 'not_support') {
             setPickedDoc(result)
+            setConvertedExt(converted_extension)
             onOpenDocPicker()
           //navigation.navigate('pickdoc', {document: result,  user: route.params.userinfo, fremail : fremail, ext: converted_extension})
         }
@@ -423,6 +430,7 @@ export default function ChatGroup({route}) {
               )}
             />
           <Modalize ref={modalizedocpickerRef} adjustToContentHeight={true}>
+                <PickDocGroup document={pickedDoc} groupid={groupid} ext={convertedExt}></PickDocGroup>
           </Modalize>
           <Modalize ref={modalizeRecordingAudio} adjustToContentHeight={true} onClosed={async () =>{
             const re  = await AudioRecorder.current.getStatusAsync()
@@ -435,10 +443,14 @@ export default function ChatGroup({route}) {
             }
             AudioRecorder.current = new Audio.Recording()
             AudioPlayer.current = new Audio.Sound()
-  
+            
           }}>
+            <RecordAudioGroup audioRef={AudioRecorder} audioplayerRef={AudioPlayer} groupid={groupid} ></RecordAudioGroup>
           </Modalize> 
-          <Modalize ref={modalizegifRef} adjustToContentHeight={true}>
+            <Modalize ref={modalizegifRef} adjustToContentHeight={true}>
+              <FetchingGifGroup groupid={groupid}>
+                
+              </FetchingGifGroup>
           </Modalize>
           {isOpen === true ? (
           <EmojiKeyboard 
