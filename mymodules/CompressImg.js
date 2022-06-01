@@ -553,3 +553,54 @@ export async function sendGifGroup(groupid, file){
         })
     }
 }
+export async function getImageListGroup(groupid) {
+    const token = await AsyncStorageLib.getItem('token')
+    if (token) {
+        const result = await axios({
+            method:'get',
+            url: `${baseurl}/group/getimagelist/${groupid}`,
+            headers: {
+                Authorization: token
+            }
+        }).then((respone) => {
+            return respone.data
+        }).catch((err) => {
+            return []
+        })
+        return result
+    }
+}
+export async function getVidListGroup(groupid){
+    const token = await AsyncStorageLib.getItem('token')
+    if (token) {
+        const result = await axios({
+            method:'get',
+            url: `${baseurl}/group/getvideolist/${groupid}`,
+            headers: {
+                Authorization: token
+            }
+        }).then((respone) => {
+            return respone.data
+        }).catch((err) => {
+            return []
+        })
+        return result
+    }
+}
+export async function getDocListGroup(groupid){
+    const token = await AsyncStorageLib.getItem('token')
+    if (token) {
+        const result = await axios({
+            method:'get',
+            url: `${baseurl}/group/getdoclist/${groupid}`,
+            headers: {
+                Authorization: token
+            }
+        }).then((respone) => {
+            return respone.data
+        }).catch((err) => {
+            return []
+        })
+        return result
+    }
+}

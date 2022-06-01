@@ -160,9 +160,10 @@ export default function ChangeBio({route, navigation}){
     return (
         <>
         {loading ? (
-        <AppLoadingAnimation>
-
-        </AppLoadingAnimation>) : (
+            <View style={{backgroundColor: 'red', flex: 1}}>
+                <AppLoadingAnimation>
+                </AppLoadingAnimation>
+        </View>) : (
             <View style={{backgroundColor: 'white', flex: 1}}>
                 <View snapToEnd={true}>
                     <View style={{ alignItems: 'center', marginLeft: 20, flexDirection: 'row'}}>

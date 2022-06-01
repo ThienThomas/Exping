@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from "react";
-import { View, Text} from "react-native";
+import { View, Text, Image, ImageBackground} from "react-native";
 import {  useNavigation } from "@react-navigation/native";
 import { SearchBar } from "react-native-elements";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
@@ -13,6 +13,8 @@ import moment from "moment";
 import Vi from 'moment/locale/vi'
 import baseurl from "../../env";
 import { GetallGroupMess } from "../../mymodules/CompressImg";
+import { AppLoadingAnimation } from "../../elements/AppLoadingAnimation";
+import AnimatedLottieView from "lottie-react-native";
 
 const Tab = createMaterialTopTabNavigator()
 export default function Chats(){
@@ -46,7 +48,7 @@ function ListChats(){
     const navigation = useNavigation()
     const [isBusy, setIsBusy] = useState(true)
     const [email, setEmail] = useState()
-    
+    const [isloading, setIsLoading] = useState(true)
     const fetchMessages = async () => {
       const token = await AsyncStorageLib.getItem('token')
       const email = await AsyncStorageLib.getItem('email')
@@ -66,7 +68,8 @@ function ListChats(){
             return []
         })
         setMasterDataSource(messages)
-        setFilteredDataSource(messages)            
+        setFilteredDataSource(messages)      
+        setIsLoading(false)      
       }
     }
     // useEffect(() => {
@@ -161,40 +164,57 @@ function ListChats(){
     };
     return (
           <>
-            <View style={{backgroundColor: 'white', height: "100%", padding: 5}}>
-                <SearchBar 
-                round 
-                onChangeText={(text) => searchFilterFunction(text)}
-                onClear={(text) => searchFilterFunction('')}
-                searchIcon={{ size: 24, color: 'black'}}
-                containerStyle={{
-                    backgroundColor: 'transparent',
-                    borderTopWidth: 0,
-                    borderBottomWidth: 0,
-                }}
-                inputStyle={{
-                    backgroundColor:"#EEEEEE"
-                }}
-                inputContainerStyle={{
-                    backgroundColor:"#EEEEEE"
-                }}
-                placeholder="Tìm kiếm"
-                placeholderTextColor={"#B2B1B9"}
-                value={search}
-            >
-            </SearchBar>
-            <KeyboardAvoidingView>
-            <FlatList
-                data={filteredDataSource}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={ItemView}  
-                showsHorizontalScrollIndicator={false}  
-                showsVerticalScrollIndicator={false}
-                style={{ padding: 10}}
-            >
-            </FlatList>
-            </KeyboardAvoidingView>
-        </View>
+          {isloading ? (<>
+            <AppLoadingAnimation />
+          </>) : (<> 
+            {filteredDataSource.length === 0 ? (<>
+            <View style={{flex: 1,backgroundColor: 'white'}}>
+              <View style={{flex: 1, backgroundColor: 'white', alignItems: 'center'}}>
+                <AnimatedLottieView style={{margin: 20, alignSelf: 'center'}} source={require('../../assets/json/finding.json')} autoPlay loop></AnimatedLottieView>
+
+              </View>
+              <View style={{ marginBottom: 150, }}>
+                <Text style={{fontWeight: '900', textAlign: 'center',  fontSize: 16}}>Tìm một vài người bạn</Text>
+                <Text style={{fontWeight: '900', textAlign: 'center', fontSize: 16}}>và bắt đầu cuộc trò chuyện !</Text>
+              </View>
+            </View>
+            </>) : (<>
+                  <View style={{backgroundColor: 'white', height: "100%", padding: 5}}>
+                      <SearchBar 
+                      round 
+                      onChangeText={(text) => searchFilterFunction(text)}
+                      onClear={(text) => searchFilterFunction('')}
+                      searchIcon={{ size: 24, color: 'black'}}
+                      containerStyle={{
+                          backgroundColor: 'transparent',
+                          borderTopWidth: 0,
+                          borderBottomWidth: 0,
+                      }}
+                      inputStyle={{
+                          backgroundColor:"#EEEEEE"
+                      }}
+                      inputContainerStyle={{
+                          backgroundColor:"#EEEEEE"
+                      }}
+                      placeholder="Tìm kiếm"
+                      placeholderTextColor={"#B2B1B9"}
+                      value={search}
+                  >
+                  </SearchBar>
+                  <KeyboardAvoidingView>
+                  <FlatList
+                      data={filteredDataSource}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={ItemView}  
+                      showsHorizontalScrollIndicator={false}  
+                      showsVerticalScrollIndicator={false}
+                      style={{ padding: 10}}
+                  >
+                  </FlatList>
+                  </KeyboardAvoidingView>
+                  </View>
+                </>)}
+            </>)}
         </>
     )
 }
@@ -210,6 +230,7 @@ function GroupChats() {
   const navigation = useNavigation()
   const [isBusy, setIsBusy] = useState(true)
   const [email, setEmail] = useState(null)
+  const [isloading, setIsLoading] = useState(true)
 
     const searchFilterFunction = (text) => {
       if (text) {
@@ -290,6 +311,8 @@ function GroupChats() {
    setEmail(email)
    setMasterDataSource(result)
    setFilteredDataSource(result)
+   setIsLoading(false)      
+
   }
   const getItem = (item) => {
    alert(item.uid)
@@ -303,39 +326,56 @@ function GroupChats() {
     }
   }, []) 
   return (
-        <>
-          <View style={{backgroundColor: 'white', height: "100%", padding: 5}}>
-              <SearchBar 
-              round 
-              onChangeText={(text) => searchFilterFunction(text)}
-              onClear={(text) => searchFilterFunction('')}
-              searchIcon={{ size: 24, color: 'black'}}
-              containerStyle={{
-                  backgroundColor: 'transparent',
-                  borderTopWidth: 0,
-                  borderBottomWidth: 0,
-              }}
-              inputStyle={{
-                  backgroundColor:"#EEEEEE"
-              }}
-              inputContainerStyle={{
-                  backgroundColor:"#EEEEEE"
-              }}
-              placeholder="Tìm kiếm"
-              placeholderTextColor={"#B2B1B9"}
-              value={search}
-          >
-          </SearchBar>
-          <FlatList
-              data={masterDataSource}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={ItemView}  
-              showsHorizontalScrollIndicator={false}  
-              showsVerticalScrollIndicator={false}
-              style={{padding: 10, backgroundColor: 'white'}}
-          >
-          </FlatList>
-      </View>
+      <>
+      {isloading ? (<>
+        <AppLoadingAnimation />
+      </>) : (<> 
+        {filteredDataSource.length === 0 ? (<>
+        <View style={{flex: 1,backgroundColor: 'white'}}>
+          <View style={{flex: 1, backgroundColor: 'white', alignItems: 'center'}}>
+            <AnimatedLottieView style={{margin: 20, alignSelf: 'center'}} source={require('../../assets/json/team.json')} autoPlay loop></AnimatedLottieView>
+
+          </View>
+          <View style={{ marginBottom: 150, }}>
+            <Text style={{fontWeight: '900', textAlign: 'center',  fontSize: 16}}>Tạo nhóm</Text>
+            <Text style={{fontWeight: '900', textAlign: 'center', fontSize: 16}}>và kết nối nhiều hơn !</Text>
+          </View>
+        </View>
+        </>) : (<>
+                <View style={{backgroundColor: 'white', height: "100%", padding: 5}}>
+                    <SearchBar 
+                    round 
+                    onChangeText={(text) => searchFilterFunction(text)}
+                    onClear={(text) => searchFilterFunction('')}
+                    searchIcon={{ size: 24, color: 'black'}}
+                    containerStyle={{
+                        backgroundColor: 'transparent',
+                        borderTopWidth: 0,
+                        borderBottomWidth: 0,
+                    }}
+                    inputStyle={{
+                        backgroundColor:"#EEEEEE"
+                    }}
+                    inputContainerStyle={{
+                        backgroundColor:"#EEEEEE"
+                    }}
+                    placeholder="Tìm kiếm"
+                    placeholderTextColor={"#B2B1B9"}
+                    value={search}
+                >
+                </SearchBar>
+                <FlatList
+                    data={masterDataSource}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={ItemView}  
+                    showsHorizontalScrollIndicator={false}  
+                    showsVerticalScrollIndicator={false}
+                    style={{padding: 10, backgroundColor: 'white'}}
+                >
+                </FlatList>
+            </View>
+            </>)}
+        </>)}
       </>
   )
 }

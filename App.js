@@ -43,6 +43,9 @@ import TakePhotoGroup from './screen/Chat/Function/TakePhotoGroup';
 import PickPhotoGroup from './screen/Chat/Function/PickPhotoGroup';
 import PickVideoGroup from './screen/Chat/Function/PickVideoGroup';
 import ChatInfoGroup from './screen/Chat/ChatInfoGroup';
+import SharingGroup from './screen/Chat/SharingGroup';
+import OtpInput from './screen/Authentication/OtpInput';
+import ResetPassword from './screen/Authentication/ResetPassword';
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
 function App() {
@@ -69,6 +72,8 @@ function UnauthenticatedNavigator() {
         <Stack.Screen name='intro' component={Intro} />
         <Stack.Screen name='signIn' component={SignIn} />
         <Stack.Screen name='forgot' component={Forgot} />
+        <Stack.Screen name='otp' component={OtpInput} />
+        <Stack.Screen name='resetpass' component={ResetPassword} />
     </Stack.Group>
   </Stack.Navigator>
   )
@@ -259,6 +264,18 @@ function AuthenticatedNavigator() {
                   headerBackImage: () => {""},
                   })}
               />
+              <Stack.Screen 
+                name="sharinggroup" 
+                component={SharingGroup} 
+                options={ ({route}) => ({
+                  headerBackTitle: <Feather name="chevron-left" size={35} color="black" />,
+                  headerBackTitleVisible: true,
+                  headerBackTitleStyle: {
+                  color: 'black'
+                  },
+                  headerBackImage: () => {""},
+                  })}
+              />
             </Stack.Group>
             <Stack.Group screenOptions={{presentation: 'card', headerShown: false, headerTitle: "Tạo nhóm", headerTitleAlign: 'center', headerTitleStyle: {fontSize: 18, color: 'black'}}}>
                 <Stack.Screen name="creategroup" component={CreateGroupChat}
@@ -402,7 +419,6 @@ function Home() {
         name="Đoạn chat" 
         component={Chats} 
         options={{ 
-          tabBarBadge: "99+",
           tabBarBadgeStyle:{
             marginTop: 10,
           },

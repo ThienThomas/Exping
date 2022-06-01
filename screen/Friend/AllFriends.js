@@ -91,7 +91,6 @@ export default function AllFriends(){
             </View>
           </View>
           </TouchableOpacity>
-
         );
     };
     const fetchAllFriends = async () => {

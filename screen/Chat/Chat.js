@@ -20,7 +20,7 @@ import PickDoc from './Function/PickDoc'
 import RecordAudio from './Function/RecordAudio'
 import EmojiPicker, { EmojiKeyboard } from 'rn-emoji-keyboard';
 import FetchingGif from './Function/FetchingGif';
-
+import {AppLoadingAnimation} from "../../elements/AppLoadingAnimation" 
 export default function Chat({route}) {
   let {user, fremail} = route.params
   
@@ -35,6 +35,7 @@ export default function Chat({route}) {
   const modalizegifRef = useRef()
   const [pickedDoc, setPickedDoc] = useState(null)
   const [convertedExt, setConvertedExt] = useState(null)
+  const [isloading, setIsLoading] = useState(true)
   let AudioRecorder = useRef(new Audio.Recording())
   let AudioPlayer = useRef(new Audio.Sound())
   //console.log(user)
@@ -138,6 +139,7 @@ export default function Chat({route}) {
                 //console.log(error)
             })
         setMessages(mess)
+        setIsLoading(false)
       }
   }
   useEffect(() => {
@@ -193,6 +195,10 @@ export default function Chat({route}) {
     )
   }
   return (
+    <>
+    {isloading ? (<>
+    <AppLoadingAnimation></AppLoadingAnimation>
+    </>) : (<>
       <View style={{flex: 1, backgroundColor: 'white', paddingBottom: 10}}>
         <GiftedChat
             text={mess}
@@ -507,5 +513,7 @@ export default function Chat({route}) {
             categoryPosition="bottom"
          />) : <></>}
       </View>
+      </>)}
+    </>
   )
 }

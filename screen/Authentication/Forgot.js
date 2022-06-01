@@ -1,7 +1,9 @@
 import React, { useContext, useState } from "react";
-import { Text, View, Image, StyleSheet, Pressable, Dimensions} from "react-native";
+import { Text, View, Image, StyleSheet, Pressable, Dimensions, Keyboard, Alert} from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import { sendPasswordResetEmail } from "../../function/auth";
+import { AppLoadingAnimation } from "../../elements/AppLoadingAnimation";
 const styles = StyleSheet.create({
     txt_input: {
         color: 'black',
@@ -112,79 +114,81 @@ export default function Forgot(){
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
     const [modalStatus, setModalStatus] = useState(null);
-
+    const [isloading, setIsloading] = useState(false)
     const navigation = useNavigation()
-    /*
+    
     async function resetPassword() {
+        setIsloading(true)
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
         Keyboard.dismiss()
         if (reg.test(email) === true){
-            await sendPasswordResetEmail(
-                auth, email)
-                .then(function() {
-                    Alert.alert('Chờ xác nhận', 'Bạn vui lòng kiểm tra Email nhé !', [
-                        { text: 'OK', onPress: () => {navigation.goBack()} },
-                      ]);
-                })
-                .catch(function(error) {
-                    Alert.alert('Email chưa được đăng ký', 'Bạn vui lòng kiểm tra lại nhé !', [
-                        { text: 'OK', onPress: () => console.log('OK Pressed') },
-                      ]);
-           });   
+            const result = await sendPasswordResetEmail(email)
+            if (result !== "fail"){
+                Alert.alert('Thành công', 'Bạn vui lòng kiểm tra email nhé !', [
+                    { text: 'OK', onPress: () => navigation.navigate('otp', {email: email}) },
+                ]);
+            }
         }   
         else {
               Alert.alert('Email không hợp lệ', 'Bạn vui lòng kiểm tra lại nhé !', [
                 { text: 'OK', onPress: () => console.log('OK Pressed') },
               ]);
         }
-    }  */
+        setIsloading(false)
+    }  
         return (
             <>
-            <View style={{
-                justifyContent: "center", 
-                alignItems: "center", 
-                flex: 1, 
-                backgroundColor: 'white'}
-                }>
-                <Image 
-                source={require('../../assets/welcome-img.png')}
-                style={{width: Dimensions.get('window').width * 0.55, height: Dimensions.get('window').width * 0.55}}
-                resizeMethod="auto"
-                />
-                <View style={{marginTop: 10, justifyContent: 'center', alignItems: 'center'}}>
-                    <TextInput
-                        value={email}
-                        onChangeText={setEmail}
-                        placeholder='Email'
-                        placeholderTextColor="#D1d1d1"
-                        style={[styles.txt_input, styles.txt_email]
-                        }
+            {isloading ? (<>
+            <AppLoadingAnimation></AppLoadingAnimation>
+            </>) : (<>
+                <View style={{
+                    justifyContent: "center", 
+                    alignItems: "center", 
+                    flex: 1, 
+                    backgroundColor: 'white'}
+                    }>
+                    <Image 
+                    source={require('../../assets/welcome-img.png')}
+                    style={{width: Dimensions.get('window').width * 0.55, height: Dimensions.get('window').width * 0.55}}
+                    resizeMethod="auto"
                     />
-                    <View>
-                        <Pressable 
-                            style={[styles.button1, styles.registerbtn]}  
-                            //onPress={resetPassword}
-                            disabled={!email}>
-                            <Text style={[styles.btntext, styles.logtext]}>
-                                XÁC NHẬN
-                            </Text>
-                            
-                        </Pressable>
-                        <TouchableOpacity
-                                style={{alignItems: "center",
-                                        justifyContent: "center"
-                                    }}
-                                onPress={() => {navigation.goBack("signIn")}}
-                                >
-                                <Text
-                                    style={{textAlign: "center", marginTop: 10, color: "#42C2FF"}}
-                                >
-                                    Quay lại
+                    <View style={{marginTop: 10, justifyContent: 'center', alignItems: 'center'}}>
+                        <TextInput
+                            value={email}
+                            onChangeText={setEmail}
+                            placeholder='Email'
+                            placeholderTextColor="#D1d1d1"
+                            style={[styles.txt_input, styles.txt_email]
+                            }
+                        />
+                        <View>
+                            <Pressable 
+                                style={[styles.button1, styles.registerbtn]}  
+                                onPress={() => {
+                                    resetPassword()
+                                }}
+                                disabled={!email}>
+                                <Text style={[styles.btntext, styles.logtext]}>
+                                    ĐẶT LẠI MẬT KHẨU
                                 </Text>
-                            </TouchableOpacity>
+                            </Pressable>
+                            <TouchableOpacity
+
+                                    style={{alignItems: "center",
+                                            justifyContent: "center"
+                                        }}
+                                    onPress={() => {navigation.goBack("signIn")}}
+                                    >
+                                    <Text
+                                        style={{textAlign: "center", marginTop: 10, color: "#42C2FF"}}
+                                    >
+                                        Quay lại
+                                    </Text>
+                                </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-        </View>
-        </>
+                </>)}
+            </>
     )
 }

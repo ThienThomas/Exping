@@ -101,3 +101,52 @@ export async function signUp(email, password, password1){
         return false
     }
 }
+export async function sendPasswordResetEmail(email) {
+    const result = await axios({
+        method: 'post',
+        url: `${baseurl}/auth/forgotpass`,
+        data: {
+            email: email
+        }
+    }).then((response) => {
+        return response.data
+    }).catch((err) => {
+        console.log(err)
+        return "fail"
+    })
+    return result
+}
+export async function checkmyOTP(email, otp) {
+    const result = await axios({
+        method: 'post',
+        url: `${baseurl}/auth/checkotp`,
+        data: {
+            otp: otp,
+            email: email
+        }
+    }).then((response) => {
+        return response.data
+    }).catch((err) =>{
+        console.log(err)
+        return "fail"
+    })
+    return result
+}
+export async function resetPassword(email, password) {
+     console.log(email)
+     console.log(password)
+    const result = await axios({
+        method: 'post',
+        url: `${baseurl}/auth/resetpassword`,
+        data: {
+            email : email, 
+            password : password
+        }
+    }).then((response) => {
+        return response.data
+    }).catch((err) =>{
+        console.log(err.response.data.message)
+        return "password not changed"
+    })
+    return result
+}

@@ -23,7 +23,7 @@ import PickDocGroup from './Function/PickDocGroup';
 import RecordAudioGroup from './Function/RecordAudioGroup';
 import FetchingGif from './Function/FetchingGif';
 import FetchingGifGroup from './Function/FetchingGifGroup';
-
+import {AppLoadingAnimation} from "../../elements/AppLoadingAnimation"
 export default function ChatGroup({route}) {
     const {groupinfo} = route.params
     const groupid = groupinfo.docid
@@ -40,6 +40,7 @@ export default function ChatGroup({route}) {
     const modalizegifRef = useRef()
     const [pickedDoc, setPickedDoc] = useState(null)
     const [convertedExt, setConvertedExt] = useState(null)
+    const [isloading, setIsLoading] = useState(true)
     let AudioRecorder = useRef(new Audio.Recording())
     let AudioPlayer = useRef(new Audio.Sound())
     //console.log(user)
@@ -95,7 +96,7 @@ export default function ChatGroup({route}) {
         const email = await AsyncStorageLib.getItem('email')
         setMyemail(email)
         setMessages(result)
-        
+        setIsLoading(false)
     }
     // useEffect(() => {
     //   return fetchEmail()
@@ -113,7 +114,7 @@ export default function ChatGroup({route}) {
           clearInterval(interval)
       }
     }, [messages])
-  
+    
     const onSend = async () =>{
         if (mess){
           const token = await AsyncStorageLib.getItem('token')
@@ -149,6 +150,10 @@ export default function ChatGroup({route}) {
       )
     }
     return (
+      <>
+      {isloading ? (<>
+      <AppLoadingAnimation></AppLoadingAnimation>
+      </>) : (<>
         <View style={{flex: 1, backgroundColor: 'white', paddingBottom: 10}}>
           <GiftedChat
               text={mess}
@@ -473,5 +478,8 @@ export default function ChatGroup({route}) {
               categoryPosition="bottom"
            />) : <></>}
         </View>
+      </>)}
+        
+      </>
     )
 }
