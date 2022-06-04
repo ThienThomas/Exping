@@ -13,3 +13,5 @@
 <strong>Run the project: </strong>
 
 > yarn start
+
+<strong>About backend:   </strong>
