@@ -1,4 +1,15 @@
 # Exping
-<h1>An application for chatting !</h1>
+<h4>An application for chatting !</h4>
 
+<h5>Installation</h5>
+<strong>To clone this project, run the following command: </strong>
 
+> git clone https://github.com/19522264/Exping.git
+
+<strong>Install the packages: </strong>
+
+> yarn install
+
+<strong>Run the project: </strong>
+
+> yarn start
