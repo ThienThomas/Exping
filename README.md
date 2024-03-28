@@ -8,7 +8,7 @@
 
 <strong>Install the packages: </strong>
 
-> yarn install
+> yarn add
 
 <strong>Run the project: </strong>
 
